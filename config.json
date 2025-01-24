@@ -1,0 +1,26 @@
+{
+    "models": [
+        {
+            "name": "GPT-4",
+            "slug": "gpt-4",
+            "engine": "openai",
+            "api_key": "your-openai-key",
+            "icon": "🤖",
+            "enabled": true,
+            "rank": 1,
+            "max_tokens": 8192,
+            "temperature": 0.7
+        },
+        {
+            "name": "Claude 3 Opus",
+            "slug": "claude-3-opus",
+            "engine": "anthropic",
+            "api_key": "your-anthropic-key",
+            "icon": "🧠",
+            "enabled": true,
+            "rank": 2,
+            "max_tokens": 4096,
+            "temperature": 0.5
+        }
+    ]
+} 
