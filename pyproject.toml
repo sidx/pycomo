@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pycomo"
+version = "0.1.0"
+description = "Python library to consume LLM outputs"
+readme = "README.md"
+authors = [
+    {name = "Sidharth Nair", email = "sidharth.xtb@gmail.com"}
+]
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "openai>=0.28.0",
+    "anthropic>=0.34.1",
+    "httpx>=0.25.2",
+    "pydantic>=1.10.12",
+]
+
+[project.urls]
+Homepage = "https://github.com/sidx/pycomo"
+Repository = "https://github.com/sidx/pycomo.git"
+"Bug Tracker" = "https://github.com/sidx/pycomo/issues"
+
+[tool.setuptools]
+packages = ["pycomo"]
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3

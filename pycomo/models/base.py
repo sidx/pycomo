@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import AsyncGenerator, Any, Optional, List, Dict
-from ..config.model_config import ModelConfig
+from typing import AsyncGenerator, Any, List, Dict
+from ..clients.base_client import BaseClientHandler
 from ..handlers.response_handler import ResponseHandler
+from ..config.model_config import ModelConfig
 
 class BaseModel(ABC):
     def __init__(self, config: ModelConfig, response_handler: ResponseHandler):
