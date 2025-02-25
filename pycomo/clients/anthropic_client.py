@@ -1,15 +1,11 @@
+from typing import List, Dict, Any
+from .base_client import BaseClientHandler
 from anthropic import AsyncAnthropic
-from typing import AsyncGenerator, Any, List, Dict
-from pycomo.models.base import BaseModel
-from ..clients.anthropic_client import AnthropicClientHandler
 
-class AnthropicModel(BaseModel):
-    def __init__(self, config, response_handler):
-        client_handler = AnthropicClientHandler(config)
-        super().__init__(config, response_handler, client_handler)
-
-    def _initialize_client(self) -> None:
-        self.client = AsyncAnthropic(api_key=self.config.api_key)
+class AnthropicClientHandler(BaseClientHandler):
+    def __init__(self, config):
+        self.config = config
+        self.client = AsyncAnthropic(api_key=config.api_key)
 
     def process_messages(self, messages: List[Dict[str, Any]]) -> tuple[str, list]:
         system_message = ""
@@ -44,38 +40,26 @@ class AnthropicModel(BaseModel):
 
         return system_message, consolidated_messages
 
-    async def predict(self, 
-                     messages: List[Dict[str, Any]], 
-                     stream: bool = False, 
-                     **kwargs) -> AsyncGenerator[str, None] | str:
+
+    async def create_chat_completion(self, 
+                                   messages: List[Dict[str, Any]], 
+                                   stream: bool = False,
+                                   **kwargs) -> Any:
         system_message, consolidated_messages = self.process_messages(messages)
         
         if stream:
-            response = await self.client.messages.stream(
+            return await self.client.messages.stream(
                 max_tokens=self.config.max_tokens,
                 messages=consolidated_messages,
                 model=self.config.engine,
                 system=system_message,
                 **kwargs
             ).__aenter__()
-        else:
-            response = await self.client.messages.create(
-                max_tokens=self.config.max_tokens,
-                messages=consolidated_messages,
-                model=self.config.engine,
-                system=system_message,
-                **kwargs
-            )
-
-        return self.response_handler.handle_stream(response) if stream else \
-               self.response_handler.handle_completion(response)
-
-    async def predict_completion(self, prompt: str, **kwargs) -> str:
-        messages = [{"role": "user", "content": [{"type": "text", "text": prompt}]}]
-        response = await self.client.messages.create(
+        
+        return await self.client.messages.create(
             max_tokens=self.config.max_tokens,
-            messages=messages,
+            messages=consolidated_messages,
             model=self.config.engine,
+            system=system_message,
             **kwargs
         )
-        return self.response_handler.handle_completion(response)
